@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "Tile.h"
+#include <string>
 
 Tile::Tile(char color, int shape, int row, int column)
 {
