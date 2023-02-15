@@ -1,0 +1,10 @@
+2
+./test_cases/qwirkle
+place R2 at N1
+place O3 at M1
+place O3 at M2
+place O4 at X1
+save
+./test_cases/qwriklegame
+quit
+4

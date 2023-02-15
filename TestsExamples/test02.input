@@ -1,0 +1,9 @@
+2
+./test_cases/test02
+place R5 at H10
+place R4 at H9
+place G4 at I9
+place P4 at J9
+save ./test_cases/test02game
+quit
+4

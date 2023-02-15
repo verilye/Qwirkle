@@ -1,0 +1,8 @@
+2
+./test_cases/qwirkle
+place G4 at W5
+
+save
+./test_cases/test12.qwirklegame.output
+quit
+4
