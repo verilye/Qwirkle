@@ -284,10 +284,50 @@ bool place(std::string tile, std::string location, Player *player, Board *board,
 
    if (board->boardState[r][x]->getShape() == 0)
    {
+
       char colour = tile[0];
       int shape = atoi(&tile[1]);
 
-      // std::cout<<shape;
+
+      //Check to see if there are any qwirkles around the tile
+      for(int i = 1;i<=4;i++){
+         int qwirkleColourCheck = 0;
+         int qwirkleShapeCheck = 0;
+         for(int j = 1; j<=6;j++){
+            int index1 = j;
+            int index2 = 0; 
+            if(i%2 == 0){
+               index1 = index1 - (index1 *2);
+            }
+            if(i>2){
+               index2 = index1;
+               index1 = 0;
+            }
+
+            if(x+index2 >25 ||x+index2<0 || r+index1>25 || r+index1<0){
+               break;
+            }
+
+            char alpha = board->boardState[r+index1][x+index2]->getColour();
+            int beta = board->boardState[r+index1][x+index2]->getShape();
+
+            if(beta == 0 || alpha == ' '){
+               break;
+            }
+
+            if(board->boardState[r+index1][x+index2]->getColour() == alpha){
+               qwirkleColourCheck++;
+            }
+            if(board->boardState[r+index1][x+index2]->getShape() == beta){
+               qwirkleShapeCheck++;
+            }
+            if(qwirkleColourCheck==6||qwirkleShapeCheck==6){ 
+               std::cout<<"\nCant place at the end of a Qwirkle!\n";
+               return false;}
+         }
+      }
+      
+      // Take the tile out of your hand and place it on the board
       for (int i = 0; i < player->getCurrentHands()->getLength(); i++)
       {
          if (colour == player->getCurrentHands()->accessElement(i)->getTile()->getColour() && shape == player->getCurrentHands()->accessElement(i)->getTile()->getShape())

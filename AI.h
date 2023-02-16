@@ -27,7 +27,12 @@ class AI : public Player
     // When should an AI ever not place a tile in a place that is points optimal? 
     // - when holding off could let the Ai score a qwirkle
     // - stopping the player's qwirkle
-    // 
+
+    // No valid moves? (potentially the Ai should only react to things the player does)
+
+    // Play tiles that the AI has the most of, sooner qwirkle
+
+    // Always add onto the longest line of tiles if possible that isnt 5 
 
     public:
     AI();
