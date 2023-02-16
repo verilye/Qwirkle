@@ -22,38 +22,6 @@ int LinkedList::getLength()
    return this->length;
 }
 
-struct TileColour{
-
-   std::string R = "\u001b[31m";
-   std::string O = "\u001b[36m";
-   std::string Y = "\u001b[33m";
-   std::string G = "\u001b[32m";
-   std::string B = "\u001b[34m";
-   std::string P = "\u001b[35m";
-
-   // Orange changed to cyan due to compatability issues with my terminal
-   // Only 8 colours included on my local machine, widest compatability also
-
-   const char colours[6] = {'R','O','Y','G','B','P'};
-   std::string codes[6] = {"\u001b[31m","\u001b[36m","\u001b[33m","\u001b[32m","\u001b[34m", "\u001b[35m"};
-   
-} escapeCodes;
-
-std::string getColour(char c){
-
-   // iterate through TileColour
-   // If tile colour char matches TileColour char return
-
-   std::string colour; 
-
-   for (int i = 0; i<6; i++){
-      if(c == escapeCodes.colours[i])
-         return escapeCodes.codes[i];
-   }
-
-   return "";
-}
-
 // Formatted specifically for player hands
 // This is also used for testing and checking
 // that tilebag and placed tiles work properly
@@ -70,7 +38,7 @@ void LinkedList::printHand()
 
    while (temp != NULL)
    {
-      std::cout << getColour(temp->tile->getColour())<< temp->tile->getColour() <<""<< temp->tile->getShape() << ", ";
+      std::cout << escapeCodes.getEscapeCode(temp->tile->getColour())<< temp->tile->getColour() <<""<< temp->tile->getShape() << ", ";
       temp = temp->next;
    }
    std::cout << "\u001b[37m";
