@@ -60,6 +60,8 @@ void Board::updateBoard(char y, int x, Tile *tile)
 void Board::printCurrentBoard()
 {
 
+    Tile* colourAccess = new Tile();
+
     int alphabetCounter = 0;
 
     int column = 0;
@@ -92,13 +94,18 @@ void Board::printCurrentBoard()
             }
             else
             {
-                std::cout << std::setw(2) << "|" << boardState[i][column]->getColour() << boardState[i][column]->getShape();
+                std::cout << std::setw(2) << "|" << colourAccess->getEscapeCode(boardState[i][column]->getColour())<< boardState[i][column]->getColour() << boardState[i][column]->getShape();
+                // Turn console output back to white
+                std::cout << "\u001b[37m";
             }
         }
 
+        
         std::cout << std::setw(2) << " |\n";
         column = 0;
     }
+
+    delete colourAccess;
 }
 
 // Return all populated values that are on the board

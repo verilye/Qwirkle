@@ -1,6 +1,5 @@
 #include "LinkedList.h"
 #include "Node.cpp"
-#include "Tile.cpp"
 #include <iostream>
 #include <stdexcept>
 
@@ -13,7 +12,7 @@ LinkedList::LinkedList()
 
 LinkedList::~LinkedList()
 {
-   delete this->head;
+   delete this->head; 
    delete this->tail;
 }
 
@@ -29,7 +28,7 @@ int LinkedList::getLength()
 
 void LinkedList::printHand()
 {
-
+   Tile * colourAccess = new Tile();
    Node *temp = this->head;
    if (temp == NULL)
    {
@@ -38,9 +37,11 @@ void LinkedList::printHand()
 
    while (temp != NULL)
    {
-      std::cout << escapeCodes.getEscapeCode(temp->tile->getColour())<< temp->tile->getColour() <<""<< temp->tile->getShape() << ", ";
+      std::cout << colourAccess->getEscapeCode(temp->tile->getColour())<< temp->tile->getColour() <<""<< temp->tile->getShape() << ", ";
       temp = temp->next;
    }
+
+   delete colourAccess;
    std::cout << "\u001b[37m";
 }
 
