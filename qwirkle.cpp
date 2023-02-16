@@ -295,7 +295,7 @@ bool place(std::string tile, std::string location, Player *player, Board *board,
             board->updateBoard(y, x, player->getCurrentHands()->accessElement(i)->getTile());
             player->placeTile(y, x,
                               player->getCurrentHands()->accessElement(i)->getTile(), bag->getBagList(), board);
-            player->calculateScore(player, other, board);
+            player->calculateScore(player,other, board,r, x);
             return true;
          }
       }

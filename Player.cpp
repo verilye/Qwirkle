@@ -125,65 +125,105 @@ void Player::replaceTile(Tile *oldTile, LinkedList *tileBag)
 }
 //Player actions
 
-void Player::calculateScore(Player* player, Player* other, Board* board) {
-   
-    //copy data for simplicity
-    LinkedList* tilesPlaced = player->getPlacedHands();    
-    int numOfTiles = tilesPlaced->getLength();
+void Player::calculateScore(Player* player, Player* other, Board* board, int y, int x) {
+       
     std::vector<std::vector<Tile*>> boardState = board->getBoardState();
 
     int runningScore = 0;
+    //Should modify the amount of times the placed tile is scored
+    int placedTileMultiplier = 1;
+    bool up = false;
+    bool down = false;
+    bool left = false;
+    bool right = false;
    
-    if(numOfTiles > 0) {
-        
-        // Horizontal Board Check
-        for(int i = 0; i < ROWS; i++) {
+    // Horizontal Board Checks
 
-            for(int j = 0; j < COLUMNS - 1; j++) {
-                // Check to See Tile Isn't Null
-                if(boardState[i][j]->getShape() != 0 && boardState[i][j + 1]->getShape() != 0) {                    
-             
-                    if(boardState[i][j]->getColour() == boardState[i][j + 1]->getColour()) {                 
-                        runningScore++;
-                    }
-                    // Shape Check
-                    if(boardState[i][j]->getShape() == boardState[i][j + 1]->getShape()) {                 
-                        runningScore++;
-                    }
-                }
-            }
-        }
+    bool colourCheck = true;
+    bool shapeCheck = true;
 
-        // Vertical Board Check
-        for(int i = 0; i < ROWS; i++) {
-
-            for(int j = 0; j < COLUMNS - 1; j++) {
-                // Check to See Tile Isn't Null
-                if(boardState[j][i]->getShape() != 0 && boardState[j + 1][i]->getShape() != 0) {          
-                  
-                    if(boardState[j][i]->getColour() == boardState[j + 1][i]->getColour()) {                     
-                        runningScore++;
-                    }
-                    // Shape Check
-                    if(boardState[j][i]->getShape() == boardState[j + 1][i]->getShape()) { 
-                        runningScore++;
-                    }                   
-                }
-            }
-        }      
+    for(int i=x+1;i<26;i++){
+        if(boardState[y][i]->getShape() == 0){break;}
+        if(boardState[y][x]->getColour() != boardState[y][i]->getColour() ){
+            colourCheck = false;}
+        if(boardState[y][x]->getShape() != boardState[y][i]->getShape()){
+            shapeCheck = false;}
+        if(colourCheck==false && shapeCheck ==false){
+            break;}
+        else{
+            down = true;
+            runningScore++;}
     }
+
+    colourCheck = true;
+    shapeCheck = true;
+
+    for(int i=x-1;i>=0;i--){
+        if(boardState[y][i]->getShape() == 0){break;}
+        if(boardState[y][x]->getColour() != boardState[y][i]->getColour() ){
+            colourCheck = false;}
+        if(boardState[y][x]->getShape() != boardState[y][i]->getShape() ){
+            shapeCheck = false;}
+        if(colourCheck==false && shapeCheck ==false){
+            break;}
+        else{
+            up = true;
+            runningScore++;}
+    }
+
+    colourCheck = true;
+    shapeCheck = true;
+
+    // Vertical Board Checks
+    for(int i=y+1;i<26;i++){
+        if(boardState[i][x]->getShape() == 0){break;}
+        if(boardState[y][x]->getColour() != boardState[i][x]->getColour() ){
+            colourCheck = false;}
+        if(boardState[y][x]->getShape() != boardState[i][x]->getShape() ){
+            shapeCheck = false;}
+        if(colourCheck==false && shapeCheck ==false){
+            break;}
+        else{
+            right = true;
+            runningScore++;}
+    }
+
+    colourCheck = true;
+    shapeCheck = true;
+    for(int i=y-1;i>=0;i--){
+
+        if(boardState[i][x]->getShape() == 0){break;}
+        if(boardState[y][x]->getColour() != boardState[i][x]->getColour() ){
+            colourCheck = false;}
+        if(boardState[y][x]->getShape() != boardState[i][x]->getShape() ){
+            shapeCheck = false;}
+        if(colourCheck==false && shapeCheck ==false){
+            break;}
+        else{
+            left = true;
+            runningScore++;}
+    }
+
+    if(up == true || down == true)
+    {
+        if(left == true || right == true)
+        {
+            placedTileMultiplier++;
+        }
+    }
+    
+
     int totalRunningScore = 0;
-    totalRunningScore = runningScore + (player->getQWIRKLECounter() * 6) + (other->getQWIRKLECounter() * 6);
+    totalRunningScore = runningScore + (player->getQWIRKLECounter() * 6);
 
     int QWIRKLEScore = 0;
     QWIRKLEScore = player->checkQWIRKLE(player, other, board);
 
     totalRunningScore = totalRunningScore + QWIRKLEScore;
-    int incrementalScore = 0; 
-    incrementalScore = totalRunningScore - board->getBoardScore();
 
-    player->setScore(incrementalScore);
-    board->setBoardScore(incrementalScore);   
+    player->setScore(totalRunningScore + placedTileMultiplier);
+    board->setBoardScore(totalRunningScore + placedTileMultiplier);   
+
 }
 
 //Player actions
