@@ -125,7 +125,7 @@ void Player::replaceTile(Tile *oldTile, LinkedList *tileBag)
 }
 //Player actions
 
-void Player::calculateScore(Player* player, Player* other, Board* board, int y, int x) {
+void Player::calculateScore(int player,int playerCount, Player *playerArr[], Board* board, int y, int x) {
        
     std::vector<std::vector<Tile*>> boardState = board->getBoardState();
 
@@ -214,20 +214,20 @@ void Player::calculateScore(Player* player, Player* other, Board* board, int y, 
     
 
     int totalRunningScore = 0;
-    totalRunningScore = runningScore + (player->getQWIRKLECounter() * 6);
+    totalRunningScore = runningScore + (playerArr[player]->getQWIRKLECounter() * 6);
 
     int QWIRKLEScore = 0;
-    QWIRKLEScore = player->checkQWIRKLE(player, other, board);
+    QWIRKLEScore = playerArr[player]->checkQWIRKLE(player,playerCount,playerArr,board);
 
     totalRunningScore = totalRunningScore + QWIRKLEScore;
 
-    player->setScore(totalRunningScore + placedTileMultiplier);
+    playerArr[player]->setScore(totalRunningScore + placedTileMultiplier);
     board->setBoardScore(totalRunningScore + placedTileMultiplier);   
 
 }
 
 //Player actions
-int Player::checkQWIRKLE(Player* player, Player* other, Board* board) {
+int Player::checkQWIRKLE(int player,int playerCount, Player* playerArr[], Board* board) {
     std::vector<std::vector<Tile*>> boardState = board->getBoardState();
 
     int horizontalColorCheck = 0;
@@ -292,10 +292,12 @@ int Player::checkQWIRKLE(Player* player, Player* other, Board* board) {
     // Updating Player Score
     // Incremental QWIRKLE * 6 
 
-    int increment = localCounter - player->getQWIRKLECounter() - other->getQWIRKLECounter();
+    int increment = localCounter - playerArr[0]->getQWIRKLECounter() - playerArr[1]->getQWIRKLECounter()
+                    - playerArr[2]->getQWIRKLECounter() - playerArr[3]->getQWIRKLECounter();
     
-    if(localCounter - player->getQWIRKLECounter() - other->getQWIRKLECounter() >= 1) {
-        player->setQWIRKLECounter(increment);      
+    if(localCounter - playerArr[0]->getQWIRKLECounter() - playerArr[1]->getQWIRKLECounter()
+                - playerArr[2]->getQWIRKLECounter()- playerArr[3]->getQWIRKLECounter() >= 1) {
+        playerArr[player]->setQWIRKLECounter(increment);      
 
         return increment * 6;      
     }

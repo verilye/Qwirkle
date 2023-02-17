@@ -8,23 +8,13 @@
 // opening qwirkle. Originally was a series of methods in a file
 // but we found it to be more readable to create a class out of it. 
 
-class Menu
-{
-public:
-    Menu();
-    ~Menu();
-
-    // Functions
-    void mainMenu();
-    void creditDisplay();
-    void newGameMenu(Player *player1, Player *player2, TileBag *bag, Board *board);
-    bool loadGameMenu(Player *player1, Player *player2, TileBag *bag, Board *board);
-    bool nameCheck(std::string name);
-    char colours[6] = {RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE};
-    int shapes[6] = {CIRCLE, STAR_4, DIAMOND, SQUARE, STAR_6, CLOVER};
-
-protected:
-    std::string menuContent;
-};
+// Functions
+void mainMenu();
+void creditDisplay();
+void newGameMenu(Player *player1, Player *player2, Player* player3, Player* player4, TileBag *bag, Board *board);
+void addNewPlayer(int number,Player* player, TileBag* bag );
+bool loadGameMenu(Player *player1, Player *player2, TileBag *bag, Board *board);
+bool nameCheck(std::string name);
+bool numberCheck(int number);
 
 #endif

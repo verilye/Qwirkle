@@ -34,8 +34,8 @@ public:
     void dealTiles(LinkedList *tileBag);
     void placeTile(int y, int x, Tile *tile, LinkedList *TileBag, Board *board);
     void replaceTile(Tile *oldTile, LinkedList *tileBag);
-    void calculateScore(Player *player,Player* other, Board *board, int y,int x);
-    int checkQWIRKLE(Player *player, Player *other, Board *board);
+    void calculateScore(int player,int playerCount, Player *playerArr[], Board* board, int y, int x);
+    int checkQWIRKLE(int player,int playerCount, Player* playerArr[], Board* board);
     void setQWIRKLECounter(int count);
     int getQWIRKLECounter();
 

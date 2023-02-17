@@ -109,17 +109,26 @@ void setTileBag(std::string value, TileBag *bag)
     return;
 }
 
+// TODO ALTER SAVE FILE AND LOAD GAME FUNCTIONS
+
 // Saves the game to a text file
-void saveGame(std::string saveName, Board *currentState, Player *player1, Player *player2, TileBag *tilebag, std::string currentPlayer)
+void saveGame(std::string saveName, Board *currentState, int playerCount, Player* playerArr[], TileBag *tilebag, std::string currentPlayer)
 {
+    // TODO SAVE FILE SIGNIFIER TO INDICATE NUMBER OF PLAYERS OR AI
 
     std::string path = "./save/";
     path += saveName;
     path += ".txt";
 
     std::ofstream outfile(path);
-    outfile << playerInfo(player1);
-    outfile << playerInfo(player2);
+    outfile << playerInfo(playerArr[0]);
+    outfile << playerInfo(playerArr[1]);
+    if(playerCount>2){
+        outfile <<playerInfo(playerArr[2]);
+    }
+    if(playerCount==4){
+        outfile << playerInfo(playerArr[3]);
+    }
     outfile << ROWS << ", " << COLUMNS << "\n";
     outfile << currentState->printBoardValues() << "\n";
     outfile << tileBagContents(tilebag) << "\n";

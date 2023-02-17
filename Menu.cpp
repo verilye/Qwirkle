@@ -11,13 +11,10 @@
 // opening qwirkle. Originally was a series of methods in a file
 // but we found it to be more readable to create a class out of it. 
 
-Menu::Menu() {}
-Menu::~Menu() {}
-
-void Menu::mainMenu()
+void mainMenu()
 {
     /* Displays main menu content */
-    menuContent = "Menu\n"
+    std::string menuContent = "Menu\n"
                   "-----\n"
                   "1. New Game\n"
                   "2. Load Game\n"
@@ -27,7 +24,7 @@ void Menu::mainMenu()
     std::cout << "\n>";
 }
 
-void Menu::creditDisplay()
+void creditDisplay()
 {
     // system("clear");
     std::cout << std::endl
@@ -58,70 +55,67 @@ void Menu::creditDisplay()
 // Creates new users out of user input. Tiles are dealt out the player classes here
 // and the tilebag and board are initialised
 
-void Menu::newGameMenu(Player *player1, Player *player2, TileBag *bag, Board *board)
+void newGameMenu(Player *player1, Player *player2,Player* player3, Player* player4, TileBag *bag, Board *board)
 {
     
     // Enter Player 1's name
-    bool playerNameLoop = true;
-
+    
+    bool numberOPlayers = true;
     std::cout << "Starting a New Game\n\n";
 
-    // Loops until name requirements are met
-    while (playerNameLoop == true)
+    while (numberOPlayers == true)
     {
-        std::cout << "Enter a name for player 1 (uppercase characters only)\n>  ";
+        std::cout << "How many players are playing today?\n>  ";
         if (!std::cin.eof())
         {
+            int numberOfPlayers;
+            std::cin >> numberOfPlayers;
 
-            std::string name1;
-            std::cin >> name1;
-
-            if (nameCheck(name1) == true)
-            {
-
-                player1->setName(name1);
-                player1->dealTiles(bag->getBagList());
-                playerNameLoop = false;
-                std::cout << "Player 1 Created\n";
-
-                std::cin.clear();
-                std::cin.ignore();
+            if(isdigit(numberOfPlayers)==true||numberCheck(numberOfPlayers) == true){
+                addNewPlayer(1,player1,bag);
+                addNewPlayer(2,player2,bag);
+                if(numberOfPlayers>2){
+                    addNewPlayer(3,player3,bag);
+                }
+                if(numberOfPlayers==4){
+                    addNewPlayer(4,player4,bag);
+                }
+                numberOPlayers=false;
             }
-            else
-            {
-                std::cout << "\n(Names must not have "
-                          << "numbers and symbols. "
-                          << "Name must also be in upper case characters.)\n";
+            else{
+                std::cout<<"\n Please enter a number from 2-4\n";  
             }
         }
         else
         {
             std::cout << "Goodbye\n";
-            playerNameLoop = false;
+            numberOPlayers = false;
             exit(EXIT_SUCCESS);
         }
     }
 
-    playerNameLoop = true;
+}
 
-    // Enter Player 2's name
-    // Loops until name requirements are met
+void addNewPlayer(int number,Player* player, TileBag* bag){
+
+    bool playerNameLoop = true;
+     // Loops until name requirements are met
     while (playerNameLoop == true)
     {
-        std::cout << "Enter a name for player 2 (uppercase characters only)\n>  ";
+        std::cout << "Enter a name for Player "<< number<<" (uppercase characters only)\n>  ";
         if (!std::cin.eof())
         {
 
-            std::string name2;
-            std::cin >> name2;
+            std::string name;
+            std::cin >> name;
 
-            if (nameCheck(name2) == true)
+            if (nameCheck(name) == true)
             {
 
-                player2->setName(name2);
-                player2->dealTiles(bag->getBagList());
+                player->setName(name);
+                player->dealTiles(bag->getBagList());
                 playerNameLoop = false;
-                std::cout << "Player 2 Created\n";
+                std::cout << "Player "<<number<<" created\n";
 
                 std::cin.clear();
                 std::cin.ignore();
@@ -142,10 +136,11 @@ void Menu::newGameMenu(Player *player1, Player *player2, TileBag *bag, Board *bo
     }
 }
 
+
 // Open up the filestream, access the save file from user input only if its correct
 // load all information into objects ready to be passed into the gameloop.
 
-bool Menu::loadGameMenu(Player *player1, Player *player2, TileBag *bag, Board *board)
+bool loadGameMenu(Player *player1, Player *player2, TileBag *bag, Board *board)
 {
     // system("clear");
     // Take user input for filename
@@ -236,7 +231,7 @@ bool Menu::loadGameMenu(Player *player1, Player *player2, TileBag *bag, Board *b
 }
 
 // Checks if name is valid
-bool Menu::nameCheck(std::string name)
+bool nameCheck(std::string name)
 {
     bool uppConfirm;
     if (std::all_of(name.begin(), name.end(), [](char e)
@@ -248,4 +243,13 @@ bool Menu::nameCheck(std::string name)
     {
         return uppConfirm = false;
     }
+}
+
+bool numberCheck(int number){
+
+    if(number==2||number==3||number==4){
+        return true;
+    }
+
+    return false;    
 }

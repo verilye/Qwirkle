@@ -26,11 +26,11 @@
 //    The game loop works by passing each player to the player turn function consecutively
 //    where each player can take one of the player actions place, replace, save or quit
 
-int gameloop(Player *player1, Player *player2, Board *board, TileBag *bag);
-void playerTurn(Player *player, Board *board, TileBag *bag, Player *other);
-bool place(std::string tile, std::string location, Player *player, Board *board, TileBag *bag, Player *other);
+int gameloop(Player *player1, Player *player2,Player* player3, Player* player4, Board *board, TileBag *bag);
+void playerTurn(int i,int playerCount, Player *player[], Board *board, TileBag *bag);
+bool place(std::string tile, std::string location, int player,int playerCount, Player *playerArr[], Board *board, TileBag *bag);
 bool replace(std::string tile, Player *player, LinkedList *list);
-bool save(std::string saveName, Board *currentState, Player *player1, Player *player2, TileBag *tilebag, std::string activePlayer);
+bool save(std::string saveName, Board *currentState, int playerCount, Player * playerArr[], TileBag *tilebag, std::string activePlayer);
 void error();
 
 int main(void)
@@ -38,33 +38,34 @@ int main(void)
 
    Player *player1 = new Player("");
    Player *player2 = new Player("");
+   Player *player3 = new Player("");
+   Player *player4 = new Player("");
    TileBag *bag = new TileBag(new LinkedList());
    std::cout << "\n";
 
    Board *board = new Board();
 
-   Menu menu;
    int choice;
 
    std::cout << "Welcome to Qwirkle!\n-------------------" << std::endl;
    do
    {
-      menu.mainMenu();
+      mainMenu();
       std::cin >> choice;
       std::cout << "\n>";
       if (choice == 1)
       {
-         menu.newGameMenu(player1, player2, bag, board);
+         newGameMenu(player1, player2,player3,player4, bag, board);
          std::cin.clear();
-         gameloop(player1, player2, board, bag);
+         gameloop(player1, player2,player3,player4, board, bag);
       }
       if (choice == 2)
       {
 
-         if (menu.loadGameMenu(player1, player2, bag, board) == true)
+         if (loadGameMenu(player1, player2, bag, board) == true)
          {
             std::cin.clear();
-            gameloop(player1, player2, board, bag);
+            gameloop(player1, player2,player3,player4, board, bag);
          }
          else
          {
@@ -73,7 +74,7 @@ int main(void)
       }
       if (choice == 3)
       {
-         menu.creditDisplay();
+         creditDisplay();
       }
       else if (choice == 4 || std::cin.eof())
       {
@@ -93,58 +94,57 @@ int main(void)
 // Pass the Gameboard in so that we can construct a new board
 // or pass in a loaded gameboard from a save file
 
-int gameloop(Player *player1, Player *player2, Board *board, TileBag *bag)
+int gameloop(Player *player1, Player *player2,Player* player3, Player* player4, Board *board, TileBag *bag)
 {
+   //Populated by empty players with no tiles, AI or initialised players
+   Player * playerArr[] = {player1, player2, player3, player4};
+
+   //Check which, loop through the gameloop with relevant ones
+   int playerCount = 4;
+   for(int i = 0; i<4;i++){
+      if(playerArr[i]->getName() == ""){playerCount--;};
+   }
+
    std::cin.clear();
-   // board->printCurrentBoard();
 
    while (1)
    {
+      for(int i=0; i<playerCount;i++){
 
-      if (bag->getBagList()->getLength() == 0)
-      {
-         if (player1->getCurrentHands()->getLength() == 0)
+         if (bag->getBagList()->getLength() == 0)
          {
-
-            std::cout << "\n"
-                      << player1->getName() << " YOU WON WOOHOO!\n";
-
-            exit(EXIT_SUCCESS);
+            if (playerArr[i]->getCurrentHands()->getLength() == 0)
+            {
+               std::cout << "\n"<< playerArr[i]->getName() << " YOU WON WOOHOO!\n";
+               exit(EXIT_SUCCESS);
+            }
          }
+         playerTurn(i,playerCount, playerArr, board, bag);
       }
-      playerTurn(player1, board, bag, player2);
-
-      if (bag->getBagList()->getLength() == 0)
-      {
-         if (player2->getCurrentHands()->getLength() == 0)
-         {
-
-            std::cout << "\n"
-                      << player1->getName() << " YOU WON WOOHOO!\n";
-
-            exit(EXIT_SUCCESS);
-         }
-      }
-      playerTurn(player2, board, bag, player1);
    }
    return 1;
 }
 
 //
-void playerTurn(Player *player, Board *board, TileBag *bag, Player *other)
+void playerTurn(int player,int playerCount, Player *playerArr[], Board *board, TileBag *bag)
 {
 
    // system("clear");
    board->printCurrentBoard();
-   std::cout << player->getName() << " your turn \n";
+   std::cout <<"\n" << playerArr[player]->getName() << " your turn \n";
 
    bool playerTurn = true;
 
    while (playerTurn == true)
    {
       std::cin.clear();
-      std::cout << player->getName() << ": " << player->getScore() << std::endl;
-      std::cout << other->getName() << ": " << other->getScore() << std::endl;
+      // Displays scores for all players
+      for(int i = 0;i<playerCount;i++){
+         std::cout << playerArr[i]->getName() << ": " << playerArr[i]->getScore() << std::endl;
+      }
+
+      // PLAYER input
+      // Variables for Storing each part of the player's input
       std::string input = "";
       std::string command = "";
       std::string tile = "";
@@ -152,7 +152,7 @@ void playerTurn(Player *player, Board *board, TileBag *bag, Player *other)
       std::string coordinates = "";
 
       std::cout << "\nYour hand is: \n";
-      player->getCurrentHands()->printHand();
+      playerArr[player]->getCurrentHands()->printHand();
 
       // Display user prompt then interpret what player wants to do
 
@@ -205,7 +205,7 @@ void playerTurn(Player *player, Board *board, TileBag *bag, Player *other)
       if (command == "place")
       {
 
-         if (place(tile, coordinates, player, board, bag, other) == true)
+         if (place(tile, coordinates,player, playerCount, playerArr, board, bag) == true)
          {
             playerTurn = false;
          }
@@ -216,7 +216,7 @@ void playerTurn(Player *player, Board *board, TileBag *bag, Player *other)
       }
       else if (command == "replace")
       {
-         if (replace(tile, player, bag->getBagList()) == true)
+         if (replace(tile, playerArr[player], bag->getBagList()) == true)
          {
             playerTurn = false;
          }
@@ -227,7 +227,8 @@ void playerTurn(Player *player, Board *board, TileBag *bag, Player *other)
       }
       else if (command == "save")
       {
-         if (save(tile, board, player, other, bag, player->getName()) == false)
+
+         if (save(tile, board, playerCount, playerArr, bag, playerArr[player]->getName()) == false)
          {
             error();
          }
@@ -253,7 +254,7 @@ void playerTurn(Player *player, Board *board, TileBag *bag, Player *other)
    return;
 }
 
-bool place(std::string tile, std::string location, Player *player, Board *board, TileBag *bag, Player *other)
+bool place(std::string tile, std::string location, int player,int playerCount, Player *playerArr[], Board *board, TileBag *bag)
 {
 
    if (isalpha(location[0]) == 0)
@@ -322,20 +323,20 @@ bool place(std::string tile, std::string location, Player *player, Board *board,
                qwirkleShapeCheck++;
             }
             if(qwirkleColourCheck==6||qwirkleShapeCheck==6){ 
-               std::cout<<"\nCant place at the end of a Qwirkle!\n";
+               std::cout<<"\nLines cant be longer than 6!\n";
                return false;}
          }
       }
       
       // Take the tile out of your hand and place it on the board
-      for (int i = 0; i < player->getCurrentHands()->getLength(); i++)
+      for (int i = 0; i < playerArr[player]->getCurrentHands()->getLength(); i++)
       {
-         if (colour == player->getCurrentHands()->accessElement(i)->getTile()->getColour() && shape == player->getCurrentHands()->accessElement(i)->getTile()->getShape())
+         if (colour == playerArr[player]->getCurrentHands()->accessElement(i)->getTile()->getColour() && shape == playerArr[player]->getCurrentHands()->accessElement(i)->getTile()->getShape())
          {
-            board->updateBoard(y, x, player->getCurrentHands()->accessElement(i)->getTile());
-            player->placeTile(y, x,
-                              player->getCurrentHands()->accessElement(i)->getTile(), bag->getBagList(), board);
-            player->calculateScore(player,other, board,r, x);
+            board->updateBoard(y, x, playerArr[player]->getCurrentHands()->accessElement(i)->getTile());
+            playerArr[player]->placeTile(y, x,
+                              playerArr[player]->getCurrentHands()->accessElement(i)->getTile(), bag->getBagList(), board);
+            playerArr[player]->calculateScore(player, playerCount, playerArr, board,r, x);
             return true;
          }
       }
@@ -365,7 +366,7 @@ bool replace(std::string tile, Player *player, LinkedList *tilebag)
    return false;
 }
 
-bool save(std::string saveName, Board *currentState, Player *player1, Player *player2, TileBag *tilebag, std::string activePlayer)
+bool save(std::string saveName, Board *currentState,int playerCount, Player *playerArr[], TileBag *tilebag, std::string activePlayer)
 {
 
    std::string str = saveName;
@@ -378,7 +379,7 @@ bool save(std::string saveName, Board *currentState, Player *player1, Player *pl
       }
    }
 
-   saveGame(saveName, currentState, player1, player2, tilebag, activePlayer);
+   saveGame(saveName, currentState, playerCount,playerArr, tilebag, activePlayer);
 
    return true;
 }
