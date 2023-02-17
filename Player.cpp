@@ -298,7 +298,7 @@ int Player::checkQWIRKLE(int player,int playerCount, Player* playerArr[], Board*
     if(localCounter - playerArr[0]->getQWIRKLECounter() - playerArr[1]->getQWIRKLECounter()
                 - playerArr[2]->getQWIRKLECounter()- playerArr[3]->getQWIRKLECounter() >= 1) {
         playerArr[player]->setQWIRKLECounter(increment);      
-
+        std::cout<<"\nQWIRKLE!!!\n";
         return increment * 6;      
     }
     else {
