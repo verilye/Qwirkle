@@ -43,7 +43,7 @@ public:
     // char colours[6] = { RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE};
     // int shapes[6] = { CIRCLE , STAR_4, DIAMOND, SQUARE, STAR_6, CLOVER };
 
-private:
+protected:
     char colours[6] = {RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE};
     int shapes[6] = {CIRCLE, STAR_4, DIAMOND, SQUARE, STAR_6, CLOVER};
     std::string name;

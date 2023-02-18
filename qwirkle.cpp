@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "AI.h"
 #include "Board.h"
 #include "TileBag.h"
 #include "SaveFilesManip.h"
@@ -9,6 +10,8 @@
 #include <array>
 #include <string>
 #include <fstream>
+#include <stdio.h>
+#include <string.h>
 
 #define EXIT_SUCCESS 0
 
@@ -33,7 +36,7 @@ bool replace(std::string tile, Player *player, LinkedList *list);
 bool save(int current, std::string saveName, Board *currentState, int playerCount, Player * playerArr[], TileBag *tilebag, std::string activePlayer);
 void error();
 
-int main(void)
+int main(int argc, char **argv)
 {
 
    Player *player1 = new Player("");
@@ -42,8 +45,54 @@ int main(void)
    Player *player4 = new Player("");
    TileBag *bag = new TileBag(new LinkedList());
    std::cout << "\n";
-
    Board *board = new Board();
+
+   if(strcmp(argv[1],"--ai") == 0){
+      std::cout<<"Program launched with AI player enabled!";
+
+      bool playerNameLoop = true;
+      // Loops until name requirements are met
+      while (playerNameLoop == true)
+      {
+         std::cout << "\n Please enter your name (uppercase characters only)\n>  ";
+         if (!std::cin.eof())
+         {
+
+               std::string name;
+               std::cin >> name;
+
+               if (nameCheck(name) == true)
+               {
+
+                  player1->setName(name);
+                  player1->dealTiles(bag->getBagList());
+                  playerNameLoop = false;
+                  std::cout << "Player created\n";
+                  std::cout << "Welcome to the Thunderdome\n";
+
+                  AI* arnold = new AI("Arnold");
+                  arnold->dealTiles(bag->getBagList());
+
+                  std::cin.clear();
+                  std::cin.ignore();
+
+                  gameloop(player1, arnold, player3, player4, board, bag);
+               }
+               else
+               {
+                  std::cout << "\n(Names must not have "
+                           << "numbers and symbols. "
+                           << "Name must also be in upper case characters.)\n";
+               }
+         }
+         else
+         {
+               std::cout << "Goodbye\n";
+               playerNameLoop = false;
+               exit(EXIT_SUCCESS);
+         }
+      }
+   };
 
    int choice;
 

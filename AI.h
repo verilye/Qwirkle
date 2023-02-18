@@ -17,11 +17,6 @@ class AI : public Player
 
     // Things the ai should be concerned with:
 
-    // Will replacing a tile now get me more points in the future? How often should I do this
-
-    // Which of the available positions should I place my tile in? Am I opening myself up for 
-    // better moves in the futures?
-
     // Where is the place I should place my tile for optimal points? Are there multiple places?
     
     // When should an AI ever not place a tile in a place that is points optimal? 
@@ -35,8 +30,17 @@ class AI : public Player
     // Always add onto the longest line of tiles if possible that isnt 5 
 
     public:
-    AI();
-    ~AI();
+    AI(std::string name);
+    
 
-    private:
+    enum State{
+        STATE_JUDGE_POINTS_OPTIMAL_PLAYS,
+        STATE_SELECT_HAND_TILE,
+        STATE_REPLACE_TILE,
+        STATE_MAKE_DECISION,
+        STATE_PLACE_TILE
+    };
+
+    State _state;
+
 };
