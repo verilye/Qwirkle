@@ -30,7 +30,7 @@ int gameloop(Player *player1, Player *player2,Player* player3, Player* player4, 
 void playerTurn(int i,int playerCount, Player *player[], Board *board, TileBag *bag);
 bool place(std::string tile, std::string location, int player,int playerCount, Player *playerArr[], Board *board, TileBag *bag);
 bool replace(std::string tile, Player *player, LinkedList *list);
-bool save(std::string saveName, Board *currentState, int playerCount, Player * playerArr[], TileBag *tilebag, std::string activePlayer);
+bool save(int current, std::string saveName, Board *currentState, int playerCount, Player * playerArr[], TileBag *tilebag, std::string activePlayer);
 void error();
 
 int main(void)
@@ -62,9 +62,10 @@ int main(void)
       if (choice == 2)
       {
 
-         if (loadGameMenu(player1, player2, bag, board) == true)
+         if (loadGameMenu(player1, player2,player3,player4, bag, board) == true)
          {
             std::cin.clear();
+
             gameloop(player1, player2,player3,player4, board, bag);
          }
          else
@@ -97,12 +98,14 @@ int main(void)
 int gameloop(Player *player1, Player *player2,Player* player3, Player* player4, Board *board, TileBag *bag)
 {
    //Populated by empty players with no tiles, AI or initialised players
-   Player * playerArr[] = {player1, player2, player3, player4};
+   Player * playerArr[] = {player1,player2,player3,player4};
 
    //Check which, loop through the gameloop with relevant ones
    int playerCount = 4;
    for(int i = 0; i<4;i++){
-      if(playerArr[i]->getName() == ""){playerCount--;};
+      if(playerArr[i]->getName() == ""){
+         
+         playerCount--;};
    }
 
    std::cin.clear();
@@ -228,7 +231,7 @@ void playerTurn(int player,int playerCount, Player *playerArr[], Board *board, T
       else if (command == "save")
       {
 
-         if (save(tile, board, playerCount, playerArr, bag, playerArr[player]->getName()) == false)
+         if (save(player, tile, board, playerCount, playerArr, bag, playerArr[player]->getName()) == false)
          {
             error();
          }
@@ -366,7 +369,7 @@ bool replace(std::string tile, Player *player, LinkedList *tilebag)
    return false;
 }
 
-bool save(std::string saveName, Board *currentState,int playerCount, Player *playerArr[], TileBag *tilebag, std::string activePlayer)
+bool save(int active, std::string saveName, Board *currentState,int playerCount, Player *playerArr[], TileBag *tilebag, std::string activePlayer)
 {
 
    std::string str = saveName;
@@ -379,7 +382,7 @@ bool save(std::string saveName, Board *currentState,int playerCount, Player *pla
       }
    }
 
-   saveGame(saveName, currentState, playerCount,playerArr, tilebag, activePlayer);
+   saveGame(active, saveName, currentState, playerCount,playerArr, tilebag, activePlayer);
 
    return true;
 }

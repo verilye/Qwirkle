@@ -83,6 +83,8 @@ void newGameMenu(Player *player1, Player *player2,Player* player3, Player* playe
                 numberOPlayers=false;
             }
             else{
+                std::cin.clear();
+                std::cin.ignore();
                 std::cout<<"\n Please enter a number from 2-4\n";  
             }
         }
@@ -140,7 +142,7 @@ void addNewPlayer(int number,Player* player, TileBag* bag){
 // Open up the filestream, access the save file from user input only if its correct
 // load all information into objects ready to be passed into the gameloop.
 
-bool loadGameMenu(Player *player1, Player *player2, TileBag *bag, Board *board)
+bool loadGameMenu(Player *player1, Player *player2,Player* player3, Player* player4, TileBag *bag, Board *board)
 {
     // system("clear");
     // Take user input for filename
@@ -166,6 +168,7 @@ bool loadGameMenu(Player *player1, Player *player2, TileBag *bag, Board *board)
     std::string line;
 
     int i = 0;
+    std::string whoseTurn ="";
     while (getline(ifile, line))
     {
         if (i == 0)
@@ -208,22 +211,105 @@ bool loadGameMenu(Player *player1, Player *player2, TileBag *bag, Board *board)
         }
         else if (i == 9)
         {
-            if (line == player1->getName())
-            {
-            }
-            else
-            {
 
+            whoseTurn = line;
+            // store the variable, swap them around at end of file read
+
+            // if (line == player1->getName()){
+
+            // }
+            // {
                 // swap player pointers if player 2's turn
                 // so they go first
-                Player *temp;
-                temp = player1;
-                player1 = player2;
-                player2 = temp;
-            }
+            //     Player *temp;
+            //     temp = player1;
+            //     player1 = player2;
+            //     player2 = temp;
+            // }
+
+        }
+        else if(i==10){
+            player3->setName(line);
+        }
+        else if(i==11){
+            std::string score = line;
+            player3->setScore(stoi(score));
+        }
+        else if(i==12){
+            player3->setCurrentHand(line,player3);
+        }
+        else if(i==13){
+            player4->setName(line);
+        }
+         else if(i==14){
+            std::string score = line;
+            player4->setScore(stoi(score));
+        }
+        else if(i==15){
+            player4->setCurrentHand(line,player4);
         }
         i++;
     }
+
+    // Swap player pointers around so that current turn is correct when resumed
+
+    // std::string p1 = player1->getName();
+    // std::string p2 = player2->getName();
+    // std::string p3 = player3->getName();
+    // std::string p4 = player4->getName();
+    // std::string names[] = {p1,p2,p3,p4};
+    // int bump = 0;
+
+    // // string match
+
+    // for(int i =0;i<4;i++){
+    //     if(names[i]==whoseTurn){bump = i; break;}
+    // }
+    
+    // // bump up player pointers number of appropriate times
+
+    // if(bump ==1){
+
+    //     Player *temp;
+    //     temp = player2;
+    //     player2 = player3;
+    //     player3 = temp;
+
+    //     temp = nullptr;
+    //     temp = player3;
+    //     player3 = player4;
+    //     player4 = temp;
+        
+        
+    // }else if(bump == 2){
+
+    //     Player *temp;
+    //     temp = player1;
+    //     player1 = player3;
+    //     player3 = temp;
+
+    //     temp = nullptr;
+    //     temp = player2;
+    //     player2 = player4;
+    //     player4 = temp;
+
+    // }else if(bump == 3){
+
+    //     Player *temp;
+    //     temp = player4;
+    //     player4 = player3;
+    //     player3 = temp;
+
+    //     temp = nullptr;
+    //     temp = player3;
+    //     player3 = player2;
+    //     player2 = temp;
+
+    //     temp = nullptr;
+    //     temp = player2;
+    //     player2 = player1;
+    //     player1 = temp;
+    // }
 
     ifile.close();
 

@@ -13,7 +13,7 @@ void mainMenu();
 void creditDisplay();
 void newGameMenu(Player *player1, Player *player2, Player* player3, Player* player4, TileBag *bag, Board *board);
 void addNewPlayer(int number,Player* player, TileBag* bag );
-bool loadGameMenu(Player *player1, Player *player2, TileBag *bag, Board *board);
+bool loadGameMenu(Player *player1, Player *player2,Player* player3,Player* player4, TileBag *bag, Board *board);
 bool nameCheck(std::string name);
 bool numberCheck(int number);
 
