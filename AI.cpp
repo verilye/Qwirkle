@@ -35,7 +35,7 @@ std::string AI::takeTurn(Board* board){
     for (int i = 0;i<ROWS;i++) {
         for (int j = 0; j<COLUMNS-1;j++) {
             if (board->boardState[i][j]->getColour() != ' ') {
-                char a = (char)(i+'0'); 
+                char a = row[i];
                 char b = (char)(j+'0');
                 std::string option = std::string()+a+b;
                 goodOptions.push_back(option);
@@ -58,13 +58,13 @@ std::string AI::takeTurn(Board* board){
                     r = l;
                 }
             }
-            if(this->getCurrentHands()->accessElement(j)->getTile()->getColour() 
+            if(this->getCurrentHands()->accessElement(i)->getTile()->getColour() 
                 == board->boardState[r][(int)goodOptions[j][1]-'0']->getColour()){
-                greatOptions.push_back(greatOptions[j]);
+                greatOptions.push_back(goodOptions[j]);
             }
-            else if(this->getCurrentHands()->accessElement(j)->getTile()->getShape() 
+            else if(this->getCurrentHands()->accessElement(i)->getTile()->getShape() 
                 == board->boardState[r][(int)goodOptions[j][1]-'0']->getShape()){
-                greatOptions.push_back(greatOptions[j]);
+                greatOptions.push_back(goodOptions[j]);
             }
         }
     }
@@ -88,6 +88,9 @@ std::string AI::takeTurn(Board* board){
     if(fiveRow.size() == 0){
         if(garbage.size() > 0){
             input_string = generatePlaceString(garbage, fourRow,board);
+            return input_string;
+        }else{
+            input_string = generatePlaceString(goodOptions, fourRow,board);
             return input_string;
         }
     }else{
@@ -164,6 +167,8 @@ std::string AI::generatePlaceString(std::vector<std::string> selection, std::vec
     _state = STATE_REPLACE_TILE;
     Tile* tile = NULL;
     std::string input;
+    char a =' ';
+    char b = 0;
 
 
     // Check first element in array is not next to fourRow tile
@@ -171,32 +176,37 @@ std::string AI::generatePlaceString(std::vector<std::string> selection, std::vec
     for(long unsigned int i =0;i<selection.size();i++){
         for(int j=0;j<6;i++){
 
-            tile = this->currentHands->accessElement(i)->getTile();
+            tile = this->currentHands->accessElement(j)->getTile();
 
             int r = 0;
             for (int l = 0; l < ROWS; l++)
             {
-                if (selection[j][0] == this->row[l])
+                if (selection[i][0] == this->row[l])
                 {
                     r = l;
                 }
             }
 
-            if(board->boardState[selection[j][0]][selection[j][1]+1]->getColour() == ' '
-            && selection[j][1]+1 <26){
-                selection[0][1] = selection[j][1]+1;
+            int x = (int)selection[i][1]-'0';
+
+            if(x+1 <26 &&board->boardState[r][x+1]->getColour() == ' '
+            ){
+                a = row[r];
+                b = x+1;
                 goto handcheck;};
-            if(board->boardState[selection[j][0]][selection[j][1]-1]->getColour() == ' '
-            && selection[j][1]+1 >=0){
-                selection[0][1] = selection[j][1]-1;
+            if(x-1>=0  && board->boardState[r][x-1]->getColour() == ' '){
+                a = r;
+                b = x-1;
                 goto handcheck;};
-            if(board->boardState[r+1][selection[j][1]+1]->getColour() == ' '
-            && r+1 <26){
-                selection[0][0] = selection[j][1]+1;
+            if(r+1 <26  &&board->boardState[r+1][x]->getColour() == ' '
+            ){
+                a = row[r+1];
+                b = x;
                 goto handcheck;};
-            if(board->boardState[r-1][selection[j][1]+1]->getColour() == ' '
-             && r-1 >=0){
-                selection[0][0] = selection[j][1]-1;
+            if(r-1 >=0 && board->boardState[r-1][x]->getColour() == ' '
+              ){
+                a = row[r-1];
+                b = x;
                 goto handcheck;};
         };
     };
@@ -205,7 +215,7 @@ std::string AI::generatePlaceString(std::vector<std::string> selection, std::vec
 };
 
     handcheck:
-
+    
     
 
     input ="place ";
@@ -214,8 +224,8 @@ std::string AI::generatePlaceString(std::vector<std::string> selection, std::vec
     input = input + " at ";
     
     // parse selection into 2 parts and modify both parts to be adjacent coordinates
-    input = input + selection[0][0];
-    input = input + selection[0][1];
+    input = input + a;
+    input = input + (char)(b+'0');
     input = input + "\n";
 
 
