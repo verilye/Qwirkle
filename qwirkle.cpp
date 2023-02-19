@@ -17,17 +17,12 @@
 
 // QWIRKLE!
 //
-// This game file is structured like so:
-//
-//    The main menu is accessed and players can create a new game or load a game
-//    New objects are created if new game is selected
-//    Objects are populated with preexisting details if load game is selected
-//
-//    Which ever one the player choses, these objects are both passed into the
-//    'game loop' which drives the game and continues until one of the players has won
-// 
-//    The game loop works by passing each player to the player turn function consecutively
-//    where each player can take one of the player actions place, replace, save or quit
+// NOTE
+// launch qwirkle with the --ai command to enable AI
+// ./qwirkle --ai
+
+// 3-4 player mode is selected in the new game menu
+// or loaded from a save file
 
 int gameloop(Player *player1, Player *player2,Player* player3, Player* player4, Board *board, TileBag *bag);
 void playerTurn(int i,int playerCount, Player *player[], Board *board, TileBag *bag);

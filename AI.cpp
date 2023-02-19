@@ -2,6 +2,11 @@
 #include <string>
 #include <vector>
 
+    // NOTE
+    // launch qwirkle with the --ai command to enable AI
+    // ./qwirkle --ai
+
+
 AI::AI(std::string name): Player(name){
     this->alive = false;
     // This is needed to call the Player constructor to initialise the AI as a player

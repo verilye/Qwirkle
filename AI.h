@@ -3,6 +3,10 @@
 class AI : public Player
 {
 
+    // NOTE
+    // launch qwirkle with the --ai command to enable AI
+    // ./qwirkle --ai
+
     // AI should be able to take the same actions as a player
     // so it makes sense to make it a subclass of Player.
 
