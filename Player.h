@@ -39,7 +39,13 @@ public:
     void setQWIRKLECounter(int count);
     int getQWIRKLECounter();
 
+    //AI polymorphism
+    virtual std::string takeTurn(Board* board);
+    std::string generatePlaceString(std::vector<std::string> selection, std::vector<std::string> fourRow, Board* board);
+    std::string generateReplaceString();
+
     int score;
+    bool alive;
     // char colours[6] = { RED, ORANGE, YELLOW, GREEN, BLUE, PURPLE};
     // int shapes[6] = { CIRCLE , STAR_4, DIAMOND, SQUARE, STAR_6, CLOVER };
 

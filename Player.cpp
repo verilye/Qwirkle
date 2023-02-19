@@ -17,7 +17,7 @@ Player::Player(std::string name)
 
     this->currentHands = new LinkedList();
     this->placedHands = new LinkedList();
-
+    this->alive = true;
     this->score = 0;
 }
 
@@ -306,3 +306,7 @@ int Player::checkQWIRKLE(int player,int playerCount, Player* playerArr[], Board*
     }
  
 }
+
+std::string Player::takeTurn(Board* board){
+    return"";
+};

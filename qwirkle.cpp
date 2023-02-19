@@ -47,52 +47,54 @@ int main(int argc, char **argv)
    std::cout << "\n";
    Board *board = new Board();
 
-   if(strcmp(argv[1],"--ai") == 0){
-      std::cout<<"Program launched with AI player enabled!";
+   if(argc>1){
+      if(strcmp(argv[1],"--ai") == 0){
+         std::cout<<"Program launched with AI player enabled!";
 
-      bool playerNameLoop = true;
-      // Loops until name requirements are met
-      while (playerNameLoop == true)
-      {
-         std::cout << "\n Please enter your name (uppercase characters only)\n>  ";
-         if (!std::cin.eof())
+         bool playerNameLoop = true;
+         // Loops until name requirements are met
+         while (playerNameLoop == true)
          {
+            std::cout << "\n Please enter your name (uppercase characters only)\n>  ";
+            if (!std::cin.eof())
+            {
 
-               std::string name;
-               std::cin >> name;
+                  std::string name;
+                  std::cin >> name;
 
-               if (nameCheck(name) == true)
-               {
+                  if (nameCheck(name) == true)
+                  {
 
-                  player1->setName(name);
-                  player1->dealTiles(bag->getBagList());
+                     player1->setName(name);
+                     player1->dealTiles(bag->getBagList());
+                     playerNameLoop = false;
+                     std::cout << "Player created\n";
+                     std::cout << "Welcome to the Thunderdome\n";
+
+                     AI* arnold = new AI("Arnold");
+                     arnold->dealTiles(bag->getBagList());
+
+                     std::cin.clear();
+                     std::cin.ignore();
+
+                     gameloop(player1, arnold, player3, player4, board, bag);
+                  }
+                  else
+                  {
+                     std::cout << "\n(Names must not have "
+                              << "numbers and symbols. "
+                              << "Name must also be in upper case characters.)\n";
+                  }
+            }
+            else
+            {
+                  std::cout << "Goodbye\n";
                   playerNameLoop = false;
-                  std::cout << "Player created\n";
-                  std::cout << "Welcome to the Thunderdome\n";
-
-                  AI* arnold = new AI("Arnold");
-                  arnold->dealTiles(bag->getBagList());
-
-                  std::cin.clear();
-                  std::cin.ignore();
-
-                  gameloop(player1, arnold, player3, player4, board, bag);
-               }
-               else
-               {
-                  std::cout << "\n(Names must not have "
-                           << "numbers and symbols. "
-                           << "Name must also be in upper case characters.)\n";
-               }
+                  exit(EXIT_SUCCESS);
+            }
          }
-         else
-         {
-               std::cout << "Goodbye\n";
-               playerNameLoop = false;
-               exit(EXIT_SUCCESS);
-         }
-      }
-   };
+      };
+   }
 
    int choice;
 
@@ -180,7 +182,7 @@ int gameloop(Player *player1, Player *player2,Player* player3, Player* player4, 
 //
 void playerTurn(int player,int playerCount, Player *playerArr[], Board *board, TileBag *bag)
 {
-
+   
    // system("clear");
    board->printCurrentBoard();
    std::cout <<"\n" << playerArr[player]->getName() << " your turn \n";
@@ -202,14 +204,32 @@ void playerTurn(int player,int playerCount, Player *playerArr[], Board *board, T
       std::string tile = "";
       std::string at = "";
       std::string coordinates = "";
+      std::string aiInput;
 
-      std::cout << "\nYour hand is: \n";
-      playerArr[player]->getCurrentHands()->printHand();
 
-      // Display user prompt then interpret what player wants to do
+      if(playerArr[player]->alive == false){
+         // Here the AI outputs inputs to be interpreted by cin
+         std::cout<<"\nI live, puny mortal.\n";
 
-      std::cout << "\n> ";
+         AI* arnold = dynamic_cast<AI*>(playerArr[player]);
+         //Start the AI decision pipeline here
+         aiInput = arnold->takeTurn(board);
+         
+      } else{
+         
+         // Display user prompt then interpret what player wants to do
+         std::cout << "\nYour hand is: \n";
+         playerArr[player]->getCurrentHands()->printHand();
+         std::cout << "\n> ";
+      }
+
+      if(playerArr[player]->alive == false){
+         input = aiInput;
+         std::cout<< aiInput;
+      }else{
       std::getline(std::cin, input);
+      }
+
       input = input + " ";
 
       char separator = ' ';

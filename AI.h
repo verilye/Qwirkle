@@ -31,15 +31,20 @@ class AI : public Player
 
     public:
     AI(std::string name);
+    virtual std::string takeTurn(Board * board);
+    int checkRows(char y,int x,  Board* board);
+    std::string generatePlaceString(std::vector<std::string> selection, std::vector<std::string> fourRow, Board* board);
+    std::string generateReplaceString();
     
-
     enum State{
-        STATE_JUDGE_POINTS_OPTIMAL_PLAYS,
+        STATE_JUDGE_OPTIONS,
         STATE_SELECT_HAND_TILE,
-        STATE_REPLACE_TILE,
         STATE_MAKE_DECISION,
+        STATE_REPLACE_TILE,
         STATE_PLACE_TILE
     };
+
+    const char row[26] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'};
 
     State _state;
 
